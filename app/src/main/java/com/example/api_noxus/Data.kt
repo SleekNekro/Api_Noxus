@@ -11,3 +11,9 @@ data class Champ(
     @JsonProperty ("image") val img : String="",
     @JsonProperty ("title") val title : String=""
 )
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Role(
+    @JsonProperty ("name") val name: String,
+    @JsonProperty ("description") val desc: String,
+    @JsonProperty ("image") val img: String,
+)
