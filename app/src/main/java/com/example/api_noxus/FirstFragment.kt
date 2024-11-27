@@ -20,11 +20,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import com.example.api_noxus.databinding.FragmentFirstBinding
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executors
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class FirstFragment : Fragment() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -53,7 +58,7 @@ class FirstFragment : Fragment() {
                 R.layout.lst_item,
                 champ
             )
-            binding.itemList.adapter = adapter
+
 
         binding.itemList.setOnItemClickListener{ adapter, _, position, _ ->
             val champ = adapter.getItemAtPosition(position) as Champ
@@ -63,25 +68,37 @@ class FirstFragment : Fragment() {
             NavHostFragment.findNavController(this@FirstFragment)
                 .navigate(R.id.action_FirstFragment_to_fragment_details, args)
         }
+
         val preferences = PreferenceManager.getDefaultSharedPreferences(context as Context)
-        val rol: String? = preferences.getString("Champs","")
+        val diff: String? = preferences.getString("Champ","")
         val model = ViewModelProvider(this)[ViewModel::class.java]
         model.champs.observe(viewLifecycleOwner) { result ->
             Log.d("FUNCIONA", model.champs.toString())
             Log.d("resultXXX", result.toString())
             adapter.clear()
 
-            val filteredChamps = result.filter { champ ->
-                champ.diff.lowercase().contains(rol?.lowercase() ?: "")
-            }
+            val filteredChamps : List<Champ> = result.filter { champ ->
+            champ.diff.lowercase().contains(diff?.lowercase() as CharSequence)
+            }.toList()
             adapter.addAll(filteredChamps)
+            Log.d("martin", filteredChamps.toString())
         }
-
+         binding.itemList.adapter = adapter
+            val executor = Executors.newSingleThreadExecutor()
+            executor.execute{
+                refresh()
+            }
         super.onViewCreated(view, savedInstanceState)
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main,menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+    private fun refresh() {
+        lifecycleScope.launch {
+            val viewModel = ViewModel(app = Application())
+            viewModel.reload()
+        }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
@@ -92,13 +109,13 @@ class FirstFragment : Fragment() {
             return true
         }
         if (id == R.id.action_refresh){
-            lifecycleScope.launch {
-                val viewModel = ViewModel(app = Application())
-                viewModel.reload() }
+            refresh()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

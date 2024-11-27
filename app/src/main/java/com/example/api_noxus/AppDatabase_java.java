@@ -6,17 +6,17 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Champ.class,Role.class}, version =1)
-abstract class AppDatabase_Java extends RoomDatabase {
+@Database(entities = {Champ.class,Role.class}, version =1, exportSchema = false)
+public abstract class AppDatabase_java extends RoomDatabase {
 
-    private static AppDatabase_Java INSTANCE;
+    private static AppDatabase_java INSTANCE;
 
-    public static AppDatabase_Java getDatabase(Context context) {
+    public static AppDatabase_java getDatabase(Context context) {
         if (INSTANCE == null){
             INSTANCE =
                     Room.databaseBuilder(
                             context.getApplicationContext(),
-                            AppDatabase_Java.class, "db"
+                            AppDatabase_java.class, "db"
                     ).build();
         }
         return INSTANCE;

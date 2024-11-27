@@ -7,23 +7,26 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-data class Champ(
+class Champ: Serializable{
     @PrimaryKey
-    @JsonProperty ("id") val id : Int,
-    @JsonProperty ("name") val name :String,
-    @JsonProperty ("difficulty") val diff :String,
-    @JsonProperty ("image") val img : String,
-    @JsonProperty ("title") val title : String
-) : Serializable
+    @JsonProperty ("champion_id") var id : Int=0
+    @JsonProperty ("name") var name :String=""
+    @JsonProperty ("difficulty") var diff :String=""
+    @JsonProperty ("image") var img : String=""
+    @JsonProperty ("title") var title : String=""
+}
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-data class Role(
+class Role: Serializable {
     @PrimaryKey
-    @JsonProperty ("id") val id : Int,
-    @JsonProperty ("name") val name: String,
-    @JsonProperty ("description") val desc: String,
-    @JsonProperty ("image") val img: String,
-)
+    @JsonProperty("role_id")
+    var id: Int=0
+    @JsonProperty("name")
+    var name: String=""
+    @JsonProperty("description")
+    var desc: String=""
+    @JsonProperty("img_rol")
+    var img: String=""
+
+}

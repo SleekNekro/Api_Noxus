@@ -11,7 +11,7 @@ interface RetrofitService {
         @Query("apikey") apikey:String,
         @Query("select") select:String ="*"
     ): ArrayList<Champ>
-    @GET("roles")
+    @GET("role")
     suspend fun listRoles(
         @Query("apikey") apikey: String,
         @Query("select") select: String ="*"

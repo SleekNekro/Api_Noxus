@@ -3,7 +3,7 @@
     <PreferenceCategory app:title="">
 
         <EditTextPreference
-            app:key=""
+            app:key="Champ"
             app:title=""
             app:useSimpleSummaryProvider="true" />
 

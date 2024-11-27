@@ -6,14 +6,16 @@ import androidx.lifecycle.LiveData
 import java.util.concurrent.Executors
 
 
-class ViewModel (app: Application) : AndroidViewModel(app){
-    private val appDatabase : AppDatabase_Java = AppDatabase_Java.getDatabase(
-        getApplication()
+class ViewModel (private val app: Application) : AndroidViewModel(app){
+    private val appDatabase : AppDatabase_java = AppDatabase_java.getDatabase(
+        this.getApplication()
     )
     private val champDAO : ChampDAO = appDatabase.champDao
     private val roleDAO : RoleDAO = appDatabase.roleDao
-    val champs : LiveData<List<Champ>>
+     val champs : LiveData<List<Champ>>
         get() = champDAO.getChamps()
+    val rols : LiveData<List<Role>>
+        get() = roleDAO.getRole()
 
 
     suspend fun reload(){
