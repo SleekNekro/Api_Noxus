@@ -1,11 +1,23 @@
 package com.example.api_noxus
 
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
+import androidx.preference.PreferenceManager
 import com.example.api_noxus.databinding.FragmentFirstBinding
 import kotlinx.coroutines.launch
 
@@ -30,20 +42,62 @@ class FirstFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val retrofit = RetrofitServiceFactory.makeRetrofitService()
+        //val retrofit = RetrofitServiceFactory.makeRetrofitService()
 
-        lifecycleScope.launch {
-            val champ: ArrayList<Champ> = retrofit.listChamps("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dXVvZ2JpY3J1dmJhdGdxam91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MDc5NjgsImV4cCI6MjA0NzA4Mzk2OH0.HwsEVV1d6b_0pMHBTyYt88cgEd7MUyb9XrFNexqJBEY")
-            val adapter = Champ_Adapter(
+            val champ: ArrayList<Champ> = ArrayList()
+            val adapter = ChampAdapter(
                 requireContext(),
                 R.layout.lst_item,
                 champ
             )
             binding.itemList.adapter = adapter
+
+        binding.itemList.setOnItemClickListener{ adapter, _, position, _ ->
+            val champ = adapter.getItemAtPosition(position) as Champ
+            val args = Bundle().apply {
+                putSerializable("item", champ)
+            }
+            NavHostFragment.findNavController(this@FirstFragment)
+                .navigate(R.id.action_FirstFragment_to_fragment_details, args)
+        }
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context as Context)
+        val rol: String? = preferences.getString("Champs","")
+        val model = ViewModelProvider(this)[ViewModel::class.java]
+        model.champs.observe(viewLifecycleOwner) { result ->
+            Log.d("FUNCIONA", model.champs.toString())
+            Log.d("resultXXX", result.toString())
+            adapter.clear()
+
+            val filteredChamps = result.filter { champ ->
+                champ.diff.lowercase().contains(rol?.lowercase() ?: "")
+            }
+            adapter.addAll(filteredChamps)
         }
 
+        super.onViewCreated(view, savedInstanceState)
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        if (id==R.id.action_settings){
+            val i : Intent = Intent(this.context, SettingsActivity::class.java)
+            startActivity(i)
+            return true
+        }
+        if (id == R.id.action_refresh){
+            lifecycleScope.launch {
+                val viewModel = ViewModel(app = Application())
+                viewModel.reload() }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

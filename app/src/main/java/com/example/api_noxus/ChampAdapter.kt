@@ -10,20 +10,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 
-class Champ_Adapter :ArrayAdapter<Champ>{
-    constructor(context: Context, resource: Int, objects: ArrayList<Champ>):super(
-            context,
-            resource,
-            objects
-            )
-
+class ChampAdapter(context: Context, resource: Int, objects: ArrayList<Champ>) :
+    ArrayAdapter<Champ>(
+        context,
+        resource,
+        objects
+    ) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val champ = getItem(position)
         Log.w("CHAMP", champ.toString())
 
-        var view = convertView?: LayoutInflater.from(context).inflate(R.layout.lst_item,parent,false)
+        val view = convertView?: LayoutInflater.from(context).inflate(R.layout.lst_item,parent,false)
 
-        val champName = view.findViewById<TextView>(R.id.name)
+        val champName = view.findViewById<TextView>(R.id.name_role)
         val champTitle = view.findViewById<TextView>(R.id.title)
         val champDiff = view.findViewById<TextView>(R.id.diff)
         val champImg = view.findViewById<ImageView>(R.id.img)

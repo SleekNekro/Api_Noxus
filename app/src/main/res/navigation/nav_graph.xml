@@ -10,19 +10,17 @@
         android:name="com.example.api_noxus.FirstFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
-
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FirstFragment_to_fragment_details"
+            app:destination="@id/fragment_details" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.api_noxus.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/fragment_details"
+        android:name="com.example.api_noxus.fragment_details"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_fragment_details_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
