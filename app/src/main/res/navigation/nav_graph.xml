@@ -17,8 +17,8 @@
     <fragment
         android:id="@+id/fragment_details"
         android:name="com.example.api_noxus.fragment_details"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details" >
+        android:label="Roles"
+        tools:layout="@layout/fragment_details">
         <action
             android:id="@+id/action_fragment_details_to_FirstFragment"
             app:destination="@id/FirstFragment" />

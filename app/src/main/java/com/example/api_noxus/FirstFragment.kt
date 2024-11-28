@@ -76,12 +76,14 @@ class FirstFragment : Fragment() {
             Log.d("FUNCIONA", model.champs.toString())
             Log.d("resultXXX", result.toString())
             adapter.clear()
-
+            if(diff != null){
             val filteredChamps : List<Champ> = result.filter { champ ->
             champ.diff.lowercase().contains(diff?.lowercase() as CharSequence)
             }.toList()
-            adapter.addAll(filteredChamps)
-            Log.d("martin", filteredChamps.toString())
+                adapter.addAll(filteredChamps)
+                }
+            adapter.addAll(result)
+            ///Log.d("martin", filteredChamps.toString())
         }
          binding.itemList.adapter = adapter
             val executor = Executors.newSingleThreadExecutor()
