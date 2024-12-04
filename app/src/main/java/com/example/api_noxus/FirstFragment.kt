@@ -1,6 +1,5 @@
 package com.example.api_noxus
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +19,6 @@ import androidx.preference.PreferenceManager
 import com.example.api_noxus.databinding.FragmentFirstBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -50,7 +48,6 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializar el adaptador y configurarlo en la lista
         adapter = ChampAdapter(
             requireContext(),
             R.layout.lst_item,
@@ -58,7 +55,7 @@ class FirstFragment : Fragment() {
         )
         binding.itemList.adapter = adapter
 
-        // Configurar el listener de clic en los items de la lista
+
         binding.itemList.setOnItemClickListener { _, _, position, _ ->
             val champ = adapter.getItem(position) as Champ
             val args = Bundle().apply {
@@ -68,15 +65,13 @@ class FirstFragment : Fragment() {
                 .navigate(R.id.action_FirstFragment_to_fragment_details, args)
         }
 
-        // Configurar el ViewModel y observar los datos
-        model = ViewModelProvider(this)[ViewModel::class.java]
-        observeData()
 
-        // Cargar datos iniciales
+        model = ViewModelProvider(this)[ViewModel::class.java]
+        observer()
         refresh()
     }
 
-    private fun observeData() {
+    private fun observer() {
         model.champs.observe(viewLifecycleOwner) { result ->
             Log.d("FUNCIONA", "Datos recibidos: $result")
             updateAdapter(result)
@@ -84,11 +79,11 @@ class FirstFragment : Fragment() {
     }
 
     private fun updateAdapter(result: List<Champ>) {
-        // Obtener el valor de la preferencia de filtro
+
         val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val diff = preferences.getString("Champ", null)?.takeIf { it.isNotBlank() }
 
-        // Filtrar los campeones según la preferencia
+
         val filteredChamps = if (!diff.isNullOrEmpty()) {
             result.filter { champ ->
                 champ.diff.equals(diff, ignoreCase = true)
@@ -97,9 +92,6 @@ class FirstFragment : Fragment() {
             result
         }
 
-        Log.d("Filtered Data", "Campeones filtrados: $filteredChamps")
-
-        // Actualizar los datos del adaptador en el hilo principal
         lifecycleScope.launch(Dispatchers.Main) {
             adapter.clear()
             adapter.addAll(filteredChamps)

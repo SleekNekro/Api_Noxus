@@ -60,21 +60,20 @@ class fragment_details : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: Bundle? = arguments
-        // Use a mutable list to allow adding items
         val adapter: MutableList<Role> = mutableListOf()
 
-        // Get the passed Champ object
+
         val champs = args?.getSerializable("item") as Champ
         Log.i("role", champs.toString())
 
-        // Observe the ViewModel to get the list of roles
+
         val model = ViewModelProvider(this)[ViewModel::class.java]
         model.rols.observe(viewLifecycleOwner) { result ->
             Log.i("result", result.toString())
-            adapter.addAll(result)  // Add all items to the mutable list
+            adapter.addAll(result)
             Log.i("ADA1", adapter.toString())
 
-            // Find the role that matches the champ's id
+
             for (i: Role in adapter) {
                 if (i.id == champs.id) {
                     Log.i("ADA", i.toString())
@@ -88,15 +87,14 @@ class fragment_details : Fragment() {
     private fun updateUi(role: Role) {
         Log.d("MOVIE", role.toString())
 
-        // Capitalize the first character of the name
+
         binding.nameRole.text = role.name.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
 
-        // Capitalize the first character of the description
         binding.description.text = role.desc.replaceFirst(role.desc[0].toString(), role.desc[0].toString().uppercase())
 
-        // Load image using Glide
+
         Glide.with(requireContext())
             .load(role.img)
             .into(binding.Roleimg)

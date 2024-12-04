@@ -19,15 +19,19 @@ class ViewModel (private val app: Application) : AndroidViewModel(app){
 
 
     suspend fun reload(){
-        val executor = Executors.newSingleThreadExecutor()
-        val rChamp = RetrofitServiceFactory.makeRetrofitService().listChamps("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dXVvZ2JpY3J1dmJhdGdxam91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MDc5NjgsImV4cCI6MjA0NzA4Mzk2OH0.HwsEVV1d6b_0pMHBTyYt88cgEd7MUyb9XrFNexqJBEY")
-        val rRole = RetrofitServiceFactory.makeRetrofitService().listRoles("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dXVvZ2JpY3J1dmJhdGdxam91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MDc5NjgsImV4cCI6MjA0NzA4Mzk2OH0.HwsEVV1d6b_0pMHBTyYt88cgEd7MUyb9XrFNexqJBEY")
+        try {
+            val executor = Executors.newSingleThreadExecutor()
+            val rChamp = RetrofitServiceFactory.makeRetrofitService().listChamps("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dXVvZ2JpY3J1dmJhdGdxam91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MDc5NjgsImV4cCI6MjA0NzA4Mzk2OH0.HwsEVV1d6b_0pMHBTyYt88cgEd7MUyb9XrFNexqJBEY")
+            val rRole = RetrofitServiceFactory.makeRetrofitService().listRoles("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4dXVvZ2JpY3J1dmJhdGdxam91Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE1MDc5NjgsImV4cCI6MjA0NzA4Mzk2OH0.HwsEVV1d6b_0pMHBTyYt88cgEd7MUyb9XrFNexqJBEY")
 
-        executor.execute{
-            champDAO.deleteAllChamp()
-            champDAO.addMoreChamps(rChamp)
-            roleDAO.deleteAllRole()
-            roleDAO.addMoreRole(rRole)
+            executor.execute{
+                champDAO.deleteAllChamp()
+                champDAO.addMoreChamps(rChamp)
+                roleDAO.deleteAllRole()
+                roleDAO.addMoreRole(rRole)
+            }
+        } catch (e: Exception) {
+            e.message
         }
     }
 }

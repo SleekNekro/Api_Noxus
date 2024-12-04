@@ -20,13 +20,9 @@ class Champ: Serializable{
 @Entity
 class Role: Serializable {
     @PrimaryKey
-    @JsonProperty("role_id")
-    var id: Int=0
-    @JsonProperty("name")
-    var name: String=""
-    @JsonProperty("description")
-    var desc: String=""
-    @JsonProperty("img_rol")
-    var img: String=""
+    @JsonProperty("role_id") var id: Int=0
+    @JsonProperty("name") var name: String=""
+    @JsonProperty("description") var desc: String=""
+    @JsonProperty("img_rol") var img: String=""
 
 }
